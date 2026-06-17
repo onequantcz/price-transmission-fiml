@@ -18,3 +18,7 @@ The analysis was conducted in several stages. The objective was to move from sim
 Raw Price Series -> Error Correction Models (ECM) -> Structural System Specification -> FIML Estimation -> Model Restrictions -> Likelihood Ratio Testing -> Shock Transmission Analysis
 
 The ECM results were then used as a foundation for constructing a structural system of simultaneous equations. Following identification testing, the system was estimated using a custom Full Information Maximum Likelihood (FIML) estimator. Finally, restricted and unrestricted specifications were compared using likelihood ratio tests to evaluate the significance of individual transmission channels. 
+
+## ECM results
+The ECM analysis revealed statistically significant short-run and long-run relationships across all levels of the pricing chain. Table with ECM model estimated parameters below
+<img width="1048" height="338" alt="image" src="https://github.com/user-attachments/assets/91ee74b9-3031-417b-a8dd-d93c81b8dd2f" />
