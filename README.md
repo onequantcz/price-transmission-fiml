@@ -15,18 +15,6 @@ As a result, the pricing system cannot be viewed solely as a sequence of indepen
 ## Methodology
 The analysis was conducted in several stages. The objective was to move from simple statistical relationships toward a structural representation of the pricing system and its shock transmission mechanisms.
 
-Raw Price Series
-        ↓
-Error Correction Models (ECM)
-        ↓
-Structural System Specification
-        ↓
-FIML Estimation
-        ↓
-Model Restrictions
-        ↓
-Likelihood Ratio Testing
-        ↓
-Shock Transmission Analysis
+Raw Price Series -> Error Correction Models (ECM) -> Structural System Specification -> FIML Estimation -> Model Restrictions -> Likelihood Ratio Testing -> Shock Transmission Analysis
 
 The ECM results were then used as a foundation for constructing a structural system of simultaneous equations. Following identification testing, the system was estimated using a custom Full Information Maximum Likelihood (FIML) estimator. Finally, restricted and unrestricted specifications were compared using likelihood ratio tests to evaluate the significance of individual transmission channels. 
