@@ -23,9 +23,11 @@ The ECM results were then used as a foundation for constructing a structural sys
 
 ## ECM results
 The ECM analysis revealed statistically significant short-run and long-run relationships across all levels of the pricing chain. Table with ECM model estimated parameters below
+
 <img width="1126" height="327" alt="image" src="https://github.com/user-attachments/assets/bbae7002-b7a2-48e0-afc7-1cd97f80d039" />
 
 Based on those models was built a prediction interval for short period of time for confidence level of 5%
+
 <img width="333" height="298" alt="image" src="https://github.com/user-attachments/assets/316d91c9-98f6-456f-9b1f-0eb06b8221b2" /><img width="334" height="301" alt="image" src="https://github.com/user-attachments/assets/a347c8a6-d30c-4017-991b-44bd0de35185" /><img width="329" height="297" alt="image" src="https://github.com/user-attachments/assets/52d9cf08-5d00-4186-943a-5abbdcaa761f" />
 
 
@@ -40,6 +42,7 @@ Across all equations, lagged variables and error-correction mechanisms indicate 
 
 ### Long-Run Dynamics
 Long-run elasticities were derived from the ECM specification and represent equilibrium relationships between the different levels of the pricing chain, table below
+
 <img width="1024" height="320" alt="image" src="https://github.com/user-attachments/assets/bbb9c955-b218-4b95-94e2-5b5eebf29de9" />
 
 Consumer prices remain strongly linked to agricultural producer prices, with an estimated long-run elasticity of 1.04. This suggests that agricultural price changes are transmitted almost proportionally to the retail market in equilibrium.
