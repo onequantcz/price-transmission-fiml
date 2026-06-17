@@ -98,8 +98,12 @@ Consumer prices (SC) exhibit a stabilizing role. While they respond to shocks or
 
 Overall, the evidence suggests that the Czech flour market is best characterized as an industry-driven pricing system in which the processing sector acts as the central transmission node, agricultural prices absorb a large proportion of system shocks, and consumer prices contribute to long-run stabilization.
 
+## Conclusion
+The results indicate that price formation within the supply chain is inherently simultaneous rather than sequential. Cost shocks primarily originate in the processing sector and propagate upward through the chain, while demand-side shocks are transmitted in the opposite direction from consumers toward upstream producers.
 
+Shock propagation analysis identified the processing sector as the central transmission hub of the system. Agricultural prices were found to be the most responsive component, while consumer prices contribute to long-run stabilization through the error-correction mechanism.
 
+Overall, the Czech flour market can be characterized as a strongly interconnected system with asymmetric shock transmission, feedback effects between all market levels and stable long-run convergence toward equilibrium.
 
 
 
