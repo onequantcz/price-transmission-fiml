@@ -72,7 +72,7 @@ Because the likelihood function has no closed-form analytical solution, paramete
 
 <img width="499" height="255" alt="image" src="https://github.com/user-attachments/assets/30dd8c0d-e88d-4d46-b5b7-7c2b85cb0ed3" /><img width="469" height="261" alt="image" src="https://github.com/user-attachments/assets/5e229335-16b1-4817-82de-b9b67ac31ab3" />
 
-Several economically consistent specifications were evaluated and compared using likelihood-based criteria.The unrestricted model was first estimated using all relationships suggested by the structural system. Alternative specifications were then constructed by retaining only statistically significant transmission channels identified during the previous ECM analysis. Model comparison was performed using the Likelihood Ratio (LR) test. The LR test rejected the null hypothesis that the additional restrictions were valid (p = 0.015), indicating that the restricted specification provides a statistically different representation of the pricing system.
+Several economically consistent specifications were evaluated and compared using likelihood-based criteria.The unrestricted model was first estimated using all relationships suggested by the structural system. Alternative specifications were then constructed by retaining statistically significant transmission channels identified during the previous ECM analysis (with respect to theoreticaly required variables). Model comparison was performed using the Likelihood Ratio (LR) test. The LR test rejected the null hypothesis that the additional restrictions were valid (p = 0.015), indicating that the restricted specification provides a statistically different representation of the pricing system.
 
 Structural form of estimated parameters:
 
