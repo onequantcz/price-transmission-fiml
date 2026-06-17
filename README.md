@@ -23,3 +23,21 @@ The ECM results were then used as a foundation for constructing a structural sys
 The ECM analysis revealed statistically significant short-run and long-run relationships across all levels of the pricing chain. Table with ECM model estimated parameters below
 <img width="1126" height="327" alt="image" src="https://github.com/user-attachments/assets/bbae7002-b7a2-48e0-afc7-1cd97f80d039" />
 
+### Short-Run Dynamics
+Consumer prices (SC) respond strongly to changes in agricultural producer prices (CZV), with an estimated elasticity of 0.85. This indicates that agricultural price shocks are transmitted rapidly to final consumers, although the coefficient below one suggests partial shock absorption within the processing sector.
+The processing sector (CPV) acts as a transmission hub. Changes in agricultural prices significantly affect processor prices (0.17), while energy prices also play an important role in explaining short-run fluctuations.
+Agricultural producer prices exhibit strong feedback effects from downstream markets. The elasticity of agricultural prices with respect to consumer prices reaches 0.85, suggesting that demand-side signals are transmitted back to primary producers.
+Across all equations, lagged variables and error-correction mechanisms indicate the presence of dynamic adjustment processes and short-run price corrections.
+
+### Long-Run Dynamics
+Long-run elasticities were derived from the ECM specification and represent equilibrium relationships between the different levels of the pricing chain, table below
+<img width="1024" height="320" alt="image" src="https://github.com/user-attachments/assets/bbb9c955-b218-4b95-94e2-5b5eebf29de9" />
+Consumer prices remain strongly linked to agricultural producer prices, with an estimated long-run elasticity of 1.04. This suggests that agricultural price changes are transmitted almost proportionally to the retail market in equilibrium.
+The strongest relationships, however, appear in the reverse direction. Agricultural producer prices exhibit substantial long-run responses to both consumer prices (1.14) and industrial producer prices (1.38). These results indicate that price signals originating in downstream markets are eventually transmitted back to primary producers.
+Industrial producer prices occupy an intermediate position within the system. While their dependence on agricultural prices is relatively modest (0.12), they remain connected to both upstream and downstream markets and therefore act as a transmission channel between production and final consumption.
+To quantify the speed of adjustment, shock persistence was evaluated using the half-life measure. Consumer prices and agricultural producer prices exhibit very rapid adjustment dynamics, with estimated half-lives of approximately 0.42 and 0.51 periods, respectively. In practical terms, roughly half of a price shock is absorbed within less than one observation period.
+Taken together, the estimated elasticities do not support the interpretation of the supply chain as a simple one-directional pricing mechanism. Instead, the results suggest a system of simultaneous price determination characterized by feedback effects and mutual dependence between all market levels.
+
+
+
+
