@@ -33,7 +33,10 @@ Based on those models was built a prediction interval for short period of time f
 
 
 ### Short-Run Dynamics
-Consumer prices (SC) respond strongly to changes in agricultural producer prices (CZV), with an estimated elasticity of 0.85. This indicates that agricultural price shocks are transmitted rapidly to final consumers, although the coefficient below one suggests partial shock absorption within the processing sector.
+Consumer prices (SC) respond strongly to changes in agricultural producer prices (CZV), with an estimated elasticity of 0.85. This indicates that agricultural price shocks are transmitted rapidly to final consumers, although the coefficient below one suggests partial shock absorption within the processing sector. Visualized below
+
+<img width="483" height="453" alt="image" src="https://github.com/user-attachments/assets/22085a84-c3f3-4005-9539-4e73fc306e36" />
+
 
 The processing sector (CPV) acts as a transmission hub. Changes in agricultural prices significantly affect processor prices (0.17), while energy prices also play an important role in explaining short-run fluctuations.
 Agricultural producer prices exhibit strong feedback effects from downstream markets. The elasticity of agricultural prices with respect to consumer prices reaches 0.85, suggesting that demand-side signals are transmitted back to primary producers.
