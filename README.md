@@ -21,7 +21,7 @@ Raw Price Series -> Error Correction Models (ECM) -> Structural System Specifica
 
 The ECM results were then used as a foundation for constructing a structural system of simultaneous equations. Following identification testing, the system was estimated using a custom Full Information Maximum Likelihood (FIML) estimator. Finally, restricted and unrestricted specifications were compared using likelihood ratio tests to evaluate the significance of individual transmission channels. 
 
-All the computations was done in logarithmic and difference forms of variable for standartization and interpretation.
+All the computations was done in logarithmic forms of variables, which was then differenced for stationarity.
 
 ## ECM results
 The ECM analysis revealed statistically significant short-run and long-run relationships across all levels of the pricing chain. Table with ECM model estimated parameters below
