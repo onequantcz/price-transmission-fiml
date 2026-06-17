@@ -21,4 +21,5 @@ The ECM results were then used as a foundation for constructing a structural sys
 
 ## ECM results
 The ECM analysis revealed statistically significant short-run and long-run relationships across all levels of the pricing chain. Table with ECM model estimated parameters below
-<img width="1048" height="338" alt="image" src="https://github.com/user-attachments/assets/91ee74b9-3031-417b-a8dd-d93c81b8dd2f" />
+<img width="1126" height="327" alt="image" src="https://github.com/user-attachments/assets/bbae7002-b7a2-48e0-afc7-1cd97f80d039" />
+
