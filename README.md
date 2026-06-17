@@ -67,6 +67,7 @@ The structural specification was not chosen arbitrarily. Restrictions imposed on
 Under multivariate normality, FIML provides consistent and asymptotically efficient parameter estimates while accounting for the entire covariance structure of the system. Unlike equation-by-equation estimation, all parameters are estimated jointly, allowing endogenous relationships to be identified within a unified framework.
 
 Because the likelihood function has no closed-form analytical solution, parameter estimation was performed using MLE-based gradient decent, accelerated by a Nesterov momentum. The optimization procedure exhibited stable convergence for both unrestricted and restricted model specifications, see below
+
 <img width="499" height="255" alt="image" src="https://github.com/user-attachments/assets/30dd8c0d-e88d-4d46-b5b7-7c2b85cb0ed3" /><img width="469" height="261" alt="image" src="https://github.com/user-attachments/assets/5e229335-16b1-4817-82de-b9b67ac31ab3" />
 
 
