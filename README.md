@@ -1,5 +1,5 @@
 # Agricultural Price Transmission Analysis
-Investigating shock propagation across the Czech flour supply chain using ECM and simultaneous equation models
+Investigating shock propagation across the Czech flour supply chain using ECM and simultaneous equation models.
 
 ## Motivation
 Price changes in agricultural markets rarely affect all participants equally. A shock originating at the farm level may be amplified, delayed or partially absorbed before reaching processors and final consumers. 
