@@ -81,5 +81,37 @@ Reduced form:
 
 <img width="1092" height="255" alt="image" src="https://github.com/user-attachments/assets/03f6d80a-ee01-45d9-bee6-c289844ebf38" />
 
+The strongest structural relationships are observed between agricultural and consumer prices, providing evidence that price transmission is not purely one-directional. Instead, downstream market conditions affect upstream producers, while producer prices simultaneously influence final consumer prices.
+
+Energy prices emerge as the dominant cost-side driver within the system, exerting strong positive effects on both industrial and consumer prices. In contrast, expansion of crop areas reduces agricultural prices, reflecting the expected supply-side mechanism.
+
+## Shock Propagation Analysis
+To investigate how shocks propagate throughout the system, the Leontief inverse matrix was derived:
+
+<img width="514" height="190" alt="image" src="https://github.com/user-attachments/assets/82ae9e1f-226f-4842-b6aa-5c79c60e4ca3" />
+
+The results indicate that the processing sector (CPV) acts as the primary transmission hub of the entire pricing system. It exhibits the largest column sum within the Leontief matrix, implying that shocks originating in the processing sector generate the strongest system-wide responses.
+
+Agricultural producer prices (CZV) display the largest row sum, indicating that they are the most responsive component of the system and absorb a substantial share of shocks generated elsewhere in the supply chain.
+
+Consumer prices (SC) exhibit a stabilizing role. While they respond to shocks originating in other sectors, they also contribute to the correction of system-wide disequilibria through the error-correction mechanism.
+
+Overall, the evidence suggests that the Czech flour market is best characterized as an industry-driven pricing system in which the processing sector acts as the central transmission node, agricultural prices absorb a large proportion of system shocks, and consumer prices contribute to long-run stabilization.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
