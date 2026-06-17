@@ -12,6 +12,8 @@
 #
 #Optimizer works with masks, so constraints should be written in matrix form, where 1 is parameter for optimization, and 0 is a constraint.
 # =========================================================================================================================================
+
+
 FIML <- function(mask_B, mask_G, X, Y, learning_rate = 1e-3, iterations = 1e3, param_convergence = 1e-4, likelihood_convergence = 1e-5, inert = 0.9) {
   
   t <- nrow(Y)
