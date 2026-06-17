@@ -1,5 +1,5 @@
+#==========================================================================================================================================
 # Custom implementation of Full Information Maximum Likelihood and extensions
-# estimation for simultaneous equation systems.
 #
 # Features:
 # - arbitrary structural restrictions through masks
@@ -11,13 +11,16 @@
 # - AIC and BIC
 #
 #Optimizer works with masks, so constraints should be written in matrix form, where 1 is parameter for optimization, and 0 is a constraint.
-
+# =========================================================================================================================================
 FIML <- function(mask_B, mask_G, X, Y, learning_rate = 1e-3, iterations = 1e3, param_convergence = 1e-4, likelihood_convergence = 1e-5, inert = 0.9) {
   
   t <- nrow(Y)
   n <- ncol(Y)
   k <- ncol(X)
   
+# =============================================================================
+# Index builder. Decomposes masks to parameters vector for further optimization
+# =============================================================================
   build_index <- function(mask_B, mask_G) {
     
     idx <- list()
@@ -50,6 +53,9 @@ FIML <- function(mask_B, mask_G, X, Y, learning_rate = 1e-3, iterations = 1e3, p
     return(idx)
   }
   
+# ========================================== 
+# Unpacks vector of parameters back to masks
+# ==========================================
   unpack_params <- function(theta, idx, mask_B, mask_G) {
     
     B <- matrix(0, nrow(mask_B), ncol(mask_B))
@@ -79,6 +85,9 @@ FIML <- function(mask_B, mask_G, X, Y, learning_rate = 1e-3, iterations = 1e3, p
   
   params <- rep(1.5, build_index(mask_B, mask_G)$n_params)
   
+# ================================================================
+# Logarithmic likelihood function, which will be further optimized 
+# ================================================================
   log_likelihood <- function(mask_B, mask_G, X, Y, params) {
     
     t <- nrow(Y)
@@ -97,10 +106,13 @@ FIML <- function(mask_B, mask_G, X, Y, learning_rate = 1e-3, iterations = 1e3, p
     S <- (1 / t) * (t(v) %*% v)
     
     #L <- -(t/2) * log(det(S)) - 1/2 * sum(diag(solve(S) %*% t(v) %*% v)) - (t * n / 2) * log(2 * pi)
-    L <- t * log(det(B)) - t/2 * log(det(C)) - 1/2 * sum(diag(solve(C) %*% t(u) %*% u))  - (t*n/2) * log(2 * pi) #эквивалент
+    L <- t * log(det(B)) - t/2 * log(det(C)) - 1/2 * sum(diag(solve(C) %*% t(u) %*% u))  - (t*n/2) * log(2 * pi) #equivalent, just more handy form
     return(L)
   }
   
+# =========================================
+# Numeric gradient using finite differences
+# =========================================
   gradient <- function(params) {
     
     gradient <- params
@@ -119,6 +131,9 @@ FIML <- function(mask_B, mask_G, X, Y, learning_rate = 1e-3, iterations = 1e3, p
     return(gradient)
   }
   
+# ============
+# Start of GD
+# ============
   likelihood_history <- numeric(iterations)
   params_old <- params
   params_new <- params
@@ -134,7 +149,10 @@ FIML <- function(mask_B, mask_G, X, Y, learning_rate = 1e-3, iterations = 1e3, p
     
     step <- 1
     L_old <- log_likelihood(mask_B, mask_G, X, Y, params_old)
-    
+
+# =============================
+# Line search for learning rate 
+# =============================
     repeat {
       params_candidate <- params_old + step * v_new
       L_new <- log_likelihood(mask_B, mask_G, X, Y, params_candidate)
@@ -147,8 +165,11 @@ FIML <- function(mask_B, mask_G, X, Y, learning_rate = 1e-3, iterations = 1e3, p
     
     params_new <- params_old + step * v_new
     
-    #cat(params_new, "\n")
-    
+    #cat(params_new, "\n") 
+
+# ================================== 
+# Convergence criteria or bug report
+# ==================================
     if(any(!is.finite(params_new))) {
       cat("параметры улетели\n")
       break
@@ -195,6 +216,9 @@ FIML <- function(mask_B, mask_G, X, Y, learning_rate = 1e-3, iterations = 1e3, p
   G <- unpack_params(estimated_params, idx, mask_B, mask_G)$G
   P <- -solve(B) %*% G
   
+# =============================================== 
+# Numeric hessian for parameter significance test
+# =============================================== 
   hessian <- function(estimated_params) {
     
     H <- matrix(nrow = length(estimated_params), ncol = length(estimated_params))
@@ -252,7 +276,10 @@ FIML <- function(mask_B, mask_G, X, Y, learning_rate = 1e-3, iterations = 1e3, p
   return(return(list(likelihood_history = likelihood_history, B = B, G = G, P = P, p_values = p_values, lh = lh, AIC = AIC, BIC = BIC, I_inv = I_inv)))
 }
 
-#Likelihood ratio test for model comparsion
+
+# ==========================================
+# Likelihood ratio test for model comparsion
+# ==========================================
 LRtest <- function(model_full, model_restricted) {
   
   k_full <- sum(model_full$B != 0) - ncol(model_full$B) + sum(model_full$G != 0) + (ncol(model_full$B)*(ncol(model_full$B)+1))/2
@@ -263,8 +290,10 @@ LRtest <- function(model_full, model_restricted) {
   
   return(list(LR = LR, df = df, p_value = p_value))
 } 
-                  
-# Farrar-Glauber test            
+                       
+# ===================
+# Farrar-Glauber test 
+# ===================                
 FGtest <- function(X) { 
   
   p = ncol(X)
@@ -274,7 +303,10 @@ FGtest <- function(X) {
   return(list(p_value = p_value, B = B, df = df))
 }
 
-#Breusch-Pagan test
+
+# ==================
+# Breusch-Pagan test
+# ==================
 BPtest <- function(errors, X, intercept = TRUE) {
   
   tmp <- OLS(X, (errors^2), lambda = 0, intercept = intercept)
@@ -284,7 +316,10 @@ BPtest <- function(errors, X, intercept = TRUE) {
   return(list(LM = LM, p_value = p_value))
 }
 
-#Ramsey RESET test
+
+# =================
+# Ramsey RESET test
+# =================
 RESETtest <- function(X, Y, h = 3, intercept = TRUE) {
   
   model0 <- OLS(X, Y, lambda = 0, intercept = intercept)
