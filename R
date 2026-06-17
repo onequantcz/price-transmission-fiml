@@ -1,0 +1,253 @@
+# Custom implementation of Full Information Maximum Likelihood
+# estimation for simultaneous equation systems.
+#
+# Features:
+# - arbitrary structural restrictions through masks
+# - numerical likelihood maximization
+# - momentum-based gradient descent
+# - numerical Hessian estimation
+# - Fisher information matrix
+# - p-values and standard errors
+# - AIC and BIC
+#
+#Optimizer works with masks, so constraints should be written in metrix, where 1 is parameter for optimization, and 0 is a constraint
+
+FIML <- function(mask_B, mask_G, X, Y, learning_rate = 1e-3, iterations = 1e3, param_convergence = 1e-4, likelihood_convergence = 1e-5, inert = 0.9) {
+  
+  t <- nrow(Y)
+  n <- ncol(Y)
+  k <- ncol(X)
+  
+  build_index <- function(mask_B, mask_G) {
+    
+    idx <- list()
+    counter <- 1
+    
+    idx$B <- matrix(NA, nrow(mask_B), ncol(mask_B))
+    
+    for (i in 1:nrow(mask_B)) {
+      for (j in 1:ncol(mask_B)) {
+        if (mask_B[i,j] == 1) {
+          idx$B[i,j] <- counter
+          counter <- counter + 1
+        }
+      }
+    }
+    
+    idx$G <- matrix(NA, nrow(mask_G), ncol(mask_G))
+    
+    for (i in 1:nrow(mask_G)) {
+      for (j in 1:ncol(mask_G)) {
+        if (mask_G[i,j] == 1) {
+          idx$G[i,j] <- counter
+          counter <- counter + 1
+        }
+      }
+    }
+    
+    idx$n_params <- counter - 1
+    
+    return(idx)
+  }
+  
+  unpack_params <- function(theta, idx, mask_B, mask_G) {
+    
+    B <- matrix(0, nrow(mask_B), ncol(mask_B))
+    
+    for (i in 1:nrow(mask_B)) {
+      for (j in 1:ncol(mask_B)) {
+        if (mask_B[i,j] == 1) {
+          B[i,j] <- theta[idx$B[i,j]]
+        }
+      }
+    }
+    
+    diag(B) <- 1
+    
+    G <- matrix(0, nrow(mask_G), ncol(mask_G))
+    
+    for (i in 1:nrow(mask_G)) {
+      for (j in 1:ncol(mask_G)) {
+        if (mask_G[i,j] == 1) {
+          G[i,j] <- theta[idx$G[i,j]]
+        }
+      }
+    }
+    
+    return(list(B = B, G = G))
+  }
+  
+  params <- rep(1.5, build_index(mask_B, mask_G)$n_params)
+  
+  log_likelihood <- function(mask_B, mask_G, X, Y, params) {
+    
+    t <- nrow(Y)
+    n <- ncol(Y)
+    k <- ncol(X)
+    
+    idx <- build_index(mask_B, mask_G)
+    unpack <- unpack_params(params, idx, mask_B, mask_G)
+    B <- unpack$B
+    G <- unpack$G
+    
+    u <- Y %*% t(B) + X %*% t(G)
+    P <- -solve(B) %*% G
+    C <- (1 / t) * (t(u) %*% u)
+    v <- u %*% t(solve(B))
+    S <- (1 / t) * (t(v) %*% v)
+    
+    #L <- -(t/2) * log(det(S)) - 1/2 * sum(diag(solve(S) %*% t(v) %*% v)) - (t * n / 2) * log(2 * pi)
+    L <- t * log(det(B)) - t/2 * log(det(C)) - 1/2 * sum(diag(solve(C) %*% t(u) %*% u))  - (t*n/2) * log(2 * pi) #эквивалент
+    return(L)
+  }
+  
+  gradient <- function(params) {
+    
+    gradient <- params
+    
+    for (i in seq_along(gradient)) {
+      
+      tmp_plus <- params
+      tmp_plus[i] <- params[i] + 1e-5
+      tmp_plus <- tmp_plus
+      tmp_minus <- params
+      tmp_minus[i] <- params[i] - 1e-5
+      tmp_minus <- tmp_minus
+      gradient[i] <- (log_likelihood(mask_B, mask_G, X, Y, tmp_plus) - log_likelihood(mask_B, mask_G, X, Y, tmp_minus)) / (2 * 1e-5)
+    }
+    
+    return(gradient)
+  }
+  
+  likelihood_history <- numeric(iterations)
+  params_old <- params
+  params_new <- params
+  params_lookahead <- params
+  v <- numeric(length(params))
+  v_new <- v
+  
+  for (iter in 1:iterations) {
+    
+    params_lookahead <- params_old + inert * v
+    grad <- gradient(params_lookahead)
+    v_new <- inert * v + learning_rate * grad
+    
+    step <- 1
+    L_old <- log_likelihood(mask_B, mask_G, X, Y, params_old)
+    
+    repeat {
+      params_candidate <- params_old + step * v_new
+      L_new <- log_likelihood(mask_B, mask_G, X, Y, params_candidate)
+      
+      if (is.finite(L_new) && L_new >= L_old) break
+      
+      step <- step * 0.5
+      if (step < 1e-8) break
+    }
+    
+    params_new <- params_old + step * v_new
+    
+    #cat(params_new, "\n")
+    
+    if(any(!is.finite(params_new))) {
+      cat("параметры улетели\n")
+      break
+    }
+    
+    if (abs(L_new - L_old) < likelihood_convergence) {
+      cat("сходимость по likelihood на итерации ", iter, "\n")
+      params_old <- params_new
+      break
+    }
+    
+    if(all(abs(params_old - params_new) < param_convergence, na.rm = TRUE)) { 
+      cat("сходимость по параметрам достигнута на итерации ", iter, "\n") 
+      params_old <- params_new 
+      break 
+    }
+    
+    likelihood_history[iter] <- L_new
+    
+    params_old <- params_new
+    v <- step * v_new
+  }
+  
+  estimated_params <- params_old
+  idx <- build_index(mask_B, mask_G)
+  
+  param_names <- character(idx$n_params)
+  for (i in 1:nrow(mask_B)) {
+    for (j in 1:ncol(mask_B)) {
+      if (!is.na(idx$B[i,j])) {
+        param_names[idx$B[i,j]] <- paste0("B[", i, ",", j, "]")
+      }
+    }
+  }
+  for (i in 1:nrow(mask_G)) {
+    for (j in 1:ncol(mask_G)) {
+      if (!is.na(idx$G[i,j])) {
+        param_names[idx$G[i,j]] <- paste0("G[", i, ",", j, "]")
+      }
+    }
+  }
+  
+  B <- unpack_params(estimated_params, idx, mask_B, mask_G)$B
+  G <- unpack_params(estimated_params, idx, mask_B, mask_G)$G
+  P <- -solve(B) %*% G
+  
+  hessian <- function(estimated_params) {
+    
+    H <- matrix(nrow = length(estimated_params), ncol = length(estimated_params))
+    
+    eps <- 1e-4
+    for (i in seq_along(estimated_params)) {
+      
+      for (j in seq_along(estimated_params)) {
+        
+        if (i == j) {
+          tmp <- estimated_params
+          tmp_plus <- estimated_params
+          tmp_minus <- estimated_params
+          tmp_plus[i] <- tmp_plus[i] + eps
+          tmp_minus[i] <- tmp_minus[i] - eps
+          H[i, j] <- (log_likelihood(mask_B, mask_G, X, Y, tmp_plus)  - 2 * log_likelihood(mask_B, mask_G, X, Y, tmp)  + log_likelihood(mask_B, mask_G, X, Y, tmp_minus)) / ((eps)^2)
+        }
+        
+        if (i != j) {
+          tmp_plus_plus <- estimated_params
+          tmp_plus_plus[i] <- tmp_plus_plus[i] + eps
+          tmp_plus_plus[j] <- tmp_plus_plus[j] + eps
+          tmp_plus_minus <- estimated_params
+          tmp_plus_minus[i] <- tmp_plus_minus[i] + eps
+          tmp_plus_minus[j] <- tmp_plus_minus[j] - eps
+          tmp_minus_plus <- estimated_params
+          tmp_minus_plus[i] <- tmp_minus_plus[i] - eps
+          tmp_minus_plus[j] <- tmp_minus_plus[j] + eps
+          tmp_minus_minus <- estimated_params
+          tmp_minus_minus[i] <- tmp_minus_minus[i] - eps
+          tmp_minus_minus[j] <- tmp_minus_minus[j] - eps
+          H[i, j] <- (log_likelihood(mask_B, mask_G, X, Y, tmp_plus_plus) - log_likelihood(mask_B, mask_G, X, Y, tmp_plus_minus) - log_likelihood(mask_B, mask_G, X, Y, tmp_minus_plus) 
+                      + log_likelihood(mask_B, mask_G, X, Y, tmp_minus_minus)) / (4 * (eps)^2)
+        }
+      }
+    }
+    
+    return(H)
+  }
+  H <- hessian(estimated_params)
+  active <- apply(abs(H), 1, function(x) any(x > 1e-8))
+  H_reduced <- H[active, active]
+  params_reduced <- estimated_params[active]
+  names_reduced <- param_names[active]
+  
+  I_inv <- solve(-H_reduced)
+  se_reduced <- sqrt(abs(diag(I_inv)))
+  p_values_reduced <- 2 * (1 - pnorm(abs(params_reduced / se_reduced)))
+  p_values <- data.frame(p_values_reduced, names_reduced)
+  
+  lh <- log_likelihood(mask_B, mask_G, X, Y, estimated_params)
+  AIC <- -2 * lh + 2 * k
+  BIC <- -2 * lh + k * log(n)
+  
+  return(return(list(likelihood_history = likelihood_history, B = B, G = G, P = P, p_values = p_values, lh = lh, AIC = AIC, BIC = BIC, I_inv = I_inv)))
+}
