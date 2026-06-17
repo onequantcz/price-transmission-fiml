@@ -1,4 +1,4 @@
-# Custom implementation of Full Information Maximum Likelihood
+# Custom implementation of Full Information Maximum Likelihood and extensions
 # estimation for simultaneous equation systems.
 #
 # Features:
@@ -10,7 +10,7 @@
 # - p-values and standard errors
 # - AIC and BIC
 #
-#Optimizer works with masks, so constraints should be written in metrix, where 1 is parameter for optimization, and 0 is a constraint
+#Optimizer works with masks, so constraints should be written in matrix form, where 1 is parameter for optimization, and 0 is a constraint.
 
 FIML <- function(mask_B, mask_G, X, Y, learning_rate = 1e-3, iterations = 1e3, param_convergence = 1e-4, likelihood_convergence = 1e-5, inert = 0.9) {
   
@@ -251,3 +251,61 @@ FIML <- function(mask_B, mask_G, X, Y, learning_rate = 1e-3, iterations = 1e3, p
   
   return(return(list(likelihood_history = likelihood_history, B = B, G = G, P = P, p_values = p_values, lh = lh, AIC = AIC, BIC = BIC, I_inv = I_inv)))
 }
+
+#Likelihood ratio test for model comparsion
+LRtest <- function(model_full, model_restricted) {
+  
+  k_full <- sum(model_full$B != 0) - ncol(model_full$B) + sum(model_full$G != 0) + (ncol(model_full$B)*(ncol(model_full$B)+1))/2
+  k_restricted <- sum(model_restricted$B != 0) - ncol(model_restricted$B) + sum(model_restricted$G != 0) + (ncol(model_restricted$B)*(ncol(model_restricted$B)+1))/2
+  df <- k_full - k_restricted
+  LR <- 2 * (model_full$lh - model_restricted$lh)
+  p_value <- 1 - pchisq(LR, df)
+  
+  return(list(LR = LR, df = df, p_value = p_value))
+} 
+                  
+# Farrar-Glauber test            
+FGtest <- function(X) { 
+  
+  p = ncol(X)
+  df <- ((p * (p - 1)) / 2)
+  B <- -(nrow(X) - 1 - (1/6 * (2 * p + 5))) * log(det(corm(X)))
+  p_value <- 1 - pchisq(B, df = df)
+  return(list(p_value = p_value, B = B, df = df))
+}
+
+#Breusch-Pagan test
+BPtest <- function(errors, X, intercept = TRUE) {
+  
+  tmp <- OLS(X, (errors^2), lambda = 0, intercept = intercept)
+  LM <- nrow(X) * tmp$R2
+  df <- ncol(X)
+  p_value <- 1 - pchisq(LM, df)
+  return(list(LM = LM, p_value = p_value))
+}
+
+#Ramsey RESET test
+RESETtest <- function(X, Y, h = 3, intercept = TRUE) {
+  
+  model0 <- OLS(X, Y, lambda = 0, intercept = intercept)
+  RSS0 <- sum((Y - model0$estimate)^2)
+  
+  tmp <- matrix(nrow = nrow(Y), ncol = (h-1))
+  for (i in 2:h) {
+    tmp[, i-1] <- (model0$estimate)^i
+  }
+  tmp <- cbind(X, tmp)
+  
+  model1 <- OLS(tmp, Y, lambda = 0, intercept = intercept)
+  RSS1 <- sum((Y - model1$estimate)^2)
+  
+  q <- h - 1
+  k1 <- ncol(tmp)
+  if (intercept) k1 <- k1 + 1
+  F_stat <- ((RSS0 - RSS1) / q) / (RSS1 / (nrow(X) - k1))
+  p_value <- 1 - pf(F_stat, q, (nrow(X) - k1))
+  return(list(F_stat = F_stat, p_value = p_value))
+}
+
+
+                  
