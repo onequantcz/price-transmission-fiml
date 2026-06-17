@@ -59,6 +59,15 @@ To quantify the speed of adjustment, shock persistence was evaluated using the h
 Taken together, the estimated elasticities do not support the interpretation of the supply chain as a simple one-directional pricing mechanism. Instead, the results suggest a system of simultaneous price determination characterized by feedback effects and mutual dependence between all market levels.
 
 
+## FIML Estimation
+The ECM analysis suggested the presence of endogenous feedback relationships between agricultural producer prices, industrial producer prices and consumer prices. To account for these interactions, the pricing system was reformulated as a structural system of simultaneous equations and estimated using Full Information Maximum Likelihood (FIML).
+
+The structural specification was not chosen arbitrarily. Restrictions imposed on the system were derived from the economic hypotheses developed and tested in the previous ECM analysis. The resulting system therefore combines both statistical evidence and economic theory regarding the structure of price transmission within the supply chain.
+
+Under multivariate normality, FIML provides consistent and asymptotically efficient parameter estimates while accounting for the entire covariance structure of the system. Unlike equation-by-equation estimation, all parameters are estimated jointly, allowing endogenous relationships to be identified within a unified framework.
+
+Because the likelihood function has no closed-form analytical solution, parameter estimation was performed using MLE-based gradient decent, accelerated by a Nesterov momentum. The optimization procedure exhibited stable convergence for both unrestricted and restricted model specifications, see below
+<img width="499" height="255" alt="image" src="https://github.com/user-attachments/assets/30dd8c0d-e88d-4d46-b5b7-7c2b85cb0ed3" /><img width="469" height="261" alt="image" src="https://github.com/user-attachments/assets/5e229335-16b1-4817-82de-b9b67ac31ab3" />
 
 
 
